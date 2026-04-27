@@ -53,13 +53,13 @@ def find_book(books, title):
     return None
 
 
-def is_available(book):
+def is_available(books): #should be books not book?
     """
     Returns True if at least one copy is available.
     """
 
     # Write code here
-    if book["copies"] >= 1:
+    if books["copies"] >= 1:
         return True
 
 
