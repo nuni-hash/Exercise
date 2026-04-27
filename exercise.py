@@ -33,11 +33,8 @@ def is_valid_request(request):
     """
 
     # Write code here
-   count = 0
-    for book in request:
-        if len(book) == 3 and book["days"] > 0:
-            count += 1
-    if count == len(request):
+    user = request
+    if len(user) == 3 and user["days"] > 0:
         return True
 
 
@@ -67,6 +64,11 @@ def checkout_book(book):
     """
 
     # Write code here
+    for i in range(len(books)):
+        if books[i]["title"] == book:
+            books[i]["copies"] = books[i]["copies"] - 1
+            
+    return books
 
 from datetime import datetime, timedelta
 
