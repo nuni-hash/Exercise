@@ -59,6 +59,8 @@ def is_available(book):
     """
 
     # Write code here
+    if book["copies"] >= 1:
+        return True
 
 
 def checkout_book(book):
