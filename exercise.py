@@ -76,9 +76,12 @@ def calculate_due_date(days):
     """
     Returns a due date (string) based on today's date + given days.
     """
-
+    due_date = datetime.now().date() + timedelta(days=days)
+    due_date = str(due_date)
+    return due_date
     # Write code here
 
+#print(calculate_due_date(5))  # Example usage
 #####################
 # PART 2
 # Now use the helper functions to create the main function:
