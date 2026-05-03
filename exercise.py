@@ -33,10 +33,9 @@ def is_valid_request(request):
     """
 
     # Write code here
-    user = request
-    if len(user) == 3 and user["days"] > 0:
-        return True
-
+    if 'user' in request and 'title' in request and 'days' in request:
+        if request['days'] > 0:
+            return True
 
 
 def find_book(books, title):
@@ -50,27 +49,22 @@ def find_book(books, title):
     return None
 
 
-def is_available(books): #should be books not book?
+def is_available(book): 
     """
     Returns True if at least one copy is available.
     """
 
     # Write code here
-    if books["copies"] >= 1:
+    if book["copies"] >= 1:
         return True
 
 
-def checkout_book(book):
+def checkout_book(book):  #
     """
     Decreases available copies by 1.
     """
-
-    # Write code here
-    for i in range(len(books)):
-        if books[i]["title"] == book:
-            books[i]["copies"] = books[i]["copies"] - 1
-            
-    return books
+    book["copies"] = book["copies"] - 1
+    return None
 
 from datetime import datetime, timedelta
 
@@ -82,6 +76,7 @@ def calculate_due_date(days):
     due_date = str(due_date)
     return due_date
     # Write code here
+    
 
 #print(calculate_due_date(5))  # Example usage
 #####################
@@ -95,6 +90,32 @@ def process_checkouts(books, requests):
     """
 
     # Write code here
+    success = []
+    failed = []
+    
+    for request in requests:
+        if not is_valid_request(request):
+            failed.append({
+                **request, "reason":"Invalid request"
+            })
+            continue
+        title = request["title"]
+        days = request["days"]
+        book = find_book(books, title)
+        if book is None:
+            failed.append({**request, "reason":"Book not found"})
+            continue
+        if not is_available(book):
+            failed.append({**request, "reason":"No copies available"})
+            continue
+        checkout_book(book)
+        success.append({"user":request["user"],
+                        "title":request["title"],
+                        "due_date":calculate_due_date(days)})
+        final_output = {"success":success,
+                        "failed":failed,
+                        "inventory":books}                  
+    
     
     return final_output
 
