@@ -56,6 +56,8 @@ def is_available(books): #should be books not book?
     """
 
     # Write code here
+    if books == None:
+        return False
     if books["copies"] >= 1:
         return True
 
@@ -67,9 +69,9 @@ def checkout_book(book):
 
     # Write code here
     for i in range(len(books)):
-        if books[i]["title"] == book:
+        if books[i]["title"] == book["title"]:
             books[i]["copies"] = books[i]["copies"] - 1
-            
+           
     return books
 
 from datetime import datetime, timedelta
@@ -95,8 +97,30 @@ def process_checkouts(books, requests):
     """
 
     # Write code here
+    final_output = {"sucess":[], "failed":[], "inventory":[]}
     
+    for user in requests:
+        
+        book = find_book(books, user["title"])
+        if is_valid_request(user):
+
+            if is_available(book) == True:
+                checkout_book(book)
+                due = calculate_due_date(user["days"])
+                user["due-date"] = due
+                del user["days"]
+                final_output["sucess"].append(user)
+                
+            else:
+                user["reason"] = "Book not found"
+                final_output["failed"].append(user)
+                
+    final_output["inventory"] = books
+    
+
     return final_output
+
+    
 
 print(process_checkouts(books, requests))
 
